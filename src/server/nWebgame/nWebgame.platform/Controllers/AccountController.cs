@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using nWebgame.platform.Controllers.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,21 +18,19 @@ namespace nWebgame.platform.Controllers
     public class AccountController : ControllerBase
     {
 
+        private readonly ILogger<AccountController> _logger;
+
+        public AccountController(ILogger<AccountController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void CreateAccount([FromBody] CreateAccountRequest request)
         {
+            _logger.LogInformation($"request {request.Name}");
         }
 
-        // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AccountController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+  
     }
 }
