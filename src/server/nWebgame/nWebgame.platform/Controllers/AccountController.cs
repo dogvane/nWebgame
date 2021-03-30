@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using nWebgame.platform.Controllers.Models;
+using nWebgame.platform.DB;
+using nWebgame.platform.Entitys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +28,27 @@ namespace nWebgame.platform.Controllers
         }
 
         [HttpPost]
-        public void CreateAccount([FromBody] CreateAccountRequest request)
+        public Response<string> CreateAccount([FromBody] CreateAccountRequest request)
         {
-            _logger.LogInformation($"request {request.Name}");
+            _logger.LogInformation($"request {request.Name} {request.Password}");
+
+            using (var db = new DBSet())
+            {
+                var exits = db.PlatformAccounts.Where(o => o.Name == request.Name).FirstOrDefault();
+                if(exits == null)
+                {
+                    exits = new Entitys.PlatformAccount 
+                    { 
+                        Name = request.Name,
+                        Password = request.Password,
+                    };
+
+                    db.PlatformAccounts.Add(exits);
+                    db.SaveChanges();
+                }
+            }
+
+            return new Response<string>();
         }
 
   

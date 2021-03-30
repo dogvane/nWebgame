@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using RestSharp;
 
 namespace nWebgame.PlatformTest
@@ -8,10 +10,30 @@ namespace nWebgame.PlatformTest
     {
         static void Main(string[] args)
         {
+            List<Thread> threads = new List<Thread>();
+
+            for (var i = 0; i < 1; i++)
+            {
+                Thread thread = new Thread(o =>
+                {
+                    Runtest(2000);
+                });
+                thread.Start();
+                threads.Add(thread);
+            }
+
+            Thread.Sleep(10000);
+            for(var i =0;i < threads.Count; i++)
+            {
+                threads[i].Join();
+            }
+        }
+
+        static void Runtest(int num)
+        {
             Random rand = new Random();
             Stopwatch watch = Stopwatch.StartNew();
             watch.Start();
-            int num = 10000;
 
             for (var x = 0; x < num; x++)
             {
@@ -21,7 +43,7 @@ namespace nWebgame.PlatformTest
             }
 
             watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds / num);
+            Console.WriteLine("{0:F2} ms", watch.ElapsedMilliseconds / (double)num);
         }
 
         static bool login(string userName, string password)
