@@ -26,25 +26,43 @@ namespace nWebgame.platform.Controllers
         {
             _logger = logger;
         }
-
+        
         [HttpPost]
         public Response<string> CreateAccount([FromBody] CreateAccountRequest request)
         {
-            _logger.LogInformation($"request {request.Name} {request.Password}");
+            // _logger.LogInformation($"request {request.Name} {request.Password}");
+            // Console.WriteLine($"request {request.Name} {request.Password}");
 
             using (var db = new DBSet())
             {
-                var exits = db.PlatformAccounts.Where(o => o.Name == request.Name).FirstOrDefault();
-                if(exits == null)
+                using (var tran = db.Database.BeginTransaction())
                 {
-                    exits = new Entitys.PlatformAccount 
-                    { 
-                        Name = request.Name,
-                        Password = request.Password,
-                    };
+                    try
+                    {
+                        var exits = db.PlatformAccounts.FirstOrDefault(o => o.Name == request.Name);
+                        if (exits == null)
+                        {
+                            exits = new PlatformAccount
+                            {
+                                Name = request.Name,
+                                Password = request.Password,
+                            };
 
-                    db.PlatformAccounts.Add(exits);
-                    db.SaveChanges();
+                            db.PlatformAccounts.Add(exits);
+                            db.SaveChanges();
+                            tran.Commit();
+                        }
+                        else
+                        {
+                            return Response<string>.Error("账号已存在!");
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.LogError(ex, "create user fail. {0}", request.Name);
+                        tran.Rollback();
+                        return Response<string>.Error(ex.Message);
+                    }
                 }
             }
 

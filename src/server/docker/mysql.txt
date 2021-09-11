@@ -1,0 +1,25 @@
+docker run -p 3306:3306 --name my_mysql \
+-v /home/mysql/logs:/var/log/mysql \
+-v /home/mysql/data:/var/lib/mysql \
+--restart=always --privileged=true \
+-d mysql:5.7
+
+// 切换到宿主机的mysql目录
+cd /usr/local/mysql
+// 创建mysql容器
+docker run -p 3306:3306 --name my_mysql \
+-v $PWD/logs:/var/log/mysql \
+-v $PWD/data:/var/lib/mysql \
+--restart=always --privileged=true \
+-e MYSQL_ROOT_PASSWORD=123456 \
+-d mysql:5.7
+// 命令解释
+// docker run ：是docker创建容器命令
+// -p 宿主机端口:容器端口 ：端口映射
+// --name 容器名 ：自定义容器名
+// -v 宿主机目录:容器目录 ：目录映射
+// 在这里目录映射了mysql容器中的日志、数据库文件
+// --restart=always ：docker启动时自启动该容器
+// --privileged=true ：获取容器真实root权限
+// -e MYSQL_ROOT_PASSWORD ：设置mysql root账户初始密码
+// -d 镜像:版本 ：选择要创建容器的镜像，并在后台运行

@@ -12,8 +12,18 @@ namespace nWebgame.platform.Entitys
     {
         public int Code { get; set; }
 
-        public string Error { get; set; }
+        public string ErrorMessage { get; set; }
 
         public T Data { get; set; }
+
+        public static Response<T> Error(String errorMessage)
+        {
+            Response<T> ret = new Response<T>();
+
+            ret.Code = -1;
+            ret.ErrorMessage = errorMessage;
+
+            return ret;
+        }
     }
 }

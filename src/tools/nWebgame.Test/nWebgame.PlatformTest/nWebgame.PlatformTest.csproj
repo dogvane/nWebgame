@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BeetleX.Http.Clients" Version="1.5.0" />
     <PackageReference Include="Flurl.Http" Version="3.0.1" />
     <PackageReference Include="RestClient" Version="3.446.20952" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
