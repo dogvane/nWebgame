@@ -16,8 +16,8 @@ namespace nWebgame.PlatformTest
             List<Thread> threads = new List<Thread>();
 
             // 10w 次创建
-            int 线程数量 = 15;
-            int 新增数量 = 10000;
+            int 线程数量 = 12;
+            int 新增数量 = 3000;
 
             HashSet<string> allNames = new HashSet<string>(线程数量 * 新增数量 + 10);
 
@@ -101,7 +101,7 @@ namespace nWebgame.PlatformTest
                 {
                     Console.WriteLine("[threadId: {3} ] num:{2} {0:F2} ms success:{1}", watch2.ElapsedMilliseconds / (double)1000, success, num, Thread.CurrentThread.ManagedThreadId);
                     watch2.Restart();
-                    System.GC.Collect();
+                    // System.GC.Collect();
                 }
             }
 

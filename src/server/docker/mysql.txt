@@ -1,8 +1,23 @@
-docker run -p 3306:3306 --name my_mysql \
+// 新建docker实例
+
+sudo docker run -p 3306:3306 --name my_mysql \
 -v /home/mysql/logs:/var/log/mysql \
 -v /home/mysql/data:/var/lib/mysql \
 --restart=always --privileged=true \
 -d mysql:5.7
+
+// 进入docker 容器
+sudo docker exec -it my_mysql /bin/bash
+
+// 设置容器时间为当前时间，有的容器可能不准导致容器更新关联失败
+date -s "当前时间"
+// 示例：date -s "20200926 21:07:00" #yyyymmdd hh:mm:ss
+// 更新关联，因为默认服务器不在国内，所以速度慢的惊人
+apt-get update
+// 安装文本编辑器nano
+apt-get install nano
+
+
 
 // 切换到宿主机的mysql目录
 cd /usr/local/mysql
